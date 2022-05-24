@@ -113,15 +113,15 @@
 
             <?php
             if ($countryname > 0) {
-                $sel = "SELECT CI.id, CI.city, CO.country FROM countries AS CO, cities AS CI 
-                                  WHERE CI.country_id = CO.id AND CO.id=" . $countryname . " ORDER BY CO.country, CI.city";
-                $res = mysqli_query($connect, $sel);
+                $sel = "SELECT ci.id, ci.city, co.country FROM countries AS co, cities AS ci 
+                                  WHERE ci.country_id = co.id AND co.id=" . $countryname . " ORDER BY co.country, ci.city";
             }
             else {
                 $sel = "SELECT CI.id, CI.city, CO.country FROM countries AS CO, cities AS CI 
                                   WHERE CI.country_id = CO.id ORDER BY CO.country, CI.city";
-                $res = mysqli_query($connect, $sel);
             }
+            $res = mysqli_query($connect, $sel);
+            $err = mysqli_connect_error();
             ?>
 
             <table class="table table-striped">
@@ -170,7 +170,7 @@
 
             </select>
                 <input type="submit" name="selcountry1" value="Выбрать страну" class="btn btn-sm btn-info">
-            <input type="text" name="city" placeholder="Город">
+            <input type="text" name="city" class="form-input" placeholder="Город">
             </div>
 
             <div class="divgroup">
@@ -244,12 +244,42 @@
     <!-- Форма добавления/удаления отелей -->
     <div class="col-sm-6 col-md-6 col-lg-6 left">
         <h4>Добавление/удаление отелей</h4>
+
+        <?php
+        $countryid = 0;
+        if (isset($_POST['countryid'])) {
+            $countryid = $_POST['countryid'];
+            $result = mysqli_query($connect, "SELECT * FROM cities WHERE country_id=" . $countryid . " ORDER BY city");
+            $csel = array();
+        }
+        $cityid = 0;
+        if (isset($_POST['cityid'])) {
+            $cityid = $_POST['cityid'];
+        }
+        ?>
+
         <form action="index.php?page=4" method="post" class="input-group" id="formhotel">
 
             <?php
-            $sel = "SELECT ho.id, ho.hotel, ho.stars, ho.city_id, ho.country_id, ho.info, ci.id, ci.city, co.id, co.country
-            from hotels ho, cities ci,countries co
-            WHERE ho.city_id=ci.id and ho.country_id=co.id";
+            if ($countryid == 0 && $cityid == 0) {
+                $sel = "SELECT ho.id, ho.hotel, ho.stars, ho.city_id, ho.country_id, ho.info, ci.id, ci.city, co.id, co.country
+                        FROM hotels ho, cities ci,countries co
+                        WHERE ho.city_id=ci.id AND ho.country_id=co.id  
+                        ORDER BY co.country, ci.city";
+            }
+            else if ($countryid > 0 && $cityid == 0) {
+                $sel = "SELECT ho.id, ho.hotel, ho.stars, ho.city_id, ho.country_id, ho.info, ci.id, ci.city, co.id, co.country
+                        from hotels ho, cities ci,countries co
+                        WHERE ho.city_id=ci.id AND ho.country_id=co.id AND co.id=" . $countryid .
+                        " ORDER BY ci.city";
+            }
+            else if ($countryid > 0 && $cityid > 0) {
+                $sel = "SELECT ho.id, ho.hotel, ho.stars, ho.city_id, ho.country_id, ho.info, ci.id, ci.city, co.id, co.country
+                        from hotels ho, cities ci,countries co
+                        WHERE ho.city_id=ci.id AND ho.country_id=co.id AND co.id=" . $countryid . " AND ci.id=" . $cityid .
+                        " ORDER BY ho.hotel";
+            }
+            
             $res = mysqli_query($connect, $sel);
             $err = mysqli_connect_error();
             ?>
@@ -309,18 +339,6 @@
 
             </select>
             <input type="submit" name="selcountry" value="Выбрать страну" class="btn btn-sm btn-info">
-
-            <?php
-            if (isset($_POST['countryid'])) {
-                $countryid = $_POST['countryid'];
-                if ($countryid == 0) exit();
-                $result = mysqli_query($connect, "SELECT * FROM cities WHERE country_id=" . $countryid . " ORDER BY city");
-                $csel = array();
-            }
-
-            // Как после выбора страны, когда обновится страница оказаться на том же месте, а не в начале страницы?
-            ?>
-
             <select name="cityid">
                 <option value="0">Выберите город...</option>
 
@@ -333,20 +351,19 @@
                 <?php
                     $csel[$row[0]] = $row[2];
                 }
-                //mysqli_free_result($res);
+                mysqli_free_result($res);
                 ?>
 
             </select>
+                <input type="submit" name="selcity" value="Выбрать город" class="btn btn-sm btn-info">
             </div>
 
-            <div class="input-group">
-            <input type="text" name="hotel" class="form-input" placeholder="Отель">
-                <span class="input-group-text">   Количество звезд    </span>
+            <div class="divgroup">
+            <input type="text" name="hotel" class="form-input" placeholder="Название отеля">
+                <span class="input-group-text">Звезды</span>
                 <input type="number" name="stars" class="form-input" min="1" max="5">
+                <input type="text" name="cost" class="form-input" placeholder="Стоимость">
             </div>
-            <br>
-            <input type="text" name="cost" class="form-input" placeholder="Стоимость">
-            <br>
             <textarea name="info" placeholder="Описание отеля" class="form-control"></textarea>
             <br>
             <br>
@@ -358,14 +375,13 @@
         </form>
 
         <?php
-        // mysqli_free_result($res);
 
         if (isset($_POST['addhotel'])) {
 
             $hotel = trim(htmlspecialchars($_POST['hotel']));
-            $cityid = $_POST['cityid'];
+            //$cityid = $_POST['cityid'];
             //$countryid = $_POST['countryid'];    //так тоже работает
-            $countryid = $csel[$cityid];
+            //$countryid = $csel[$cityid];
             $stars = intval($_POST['stars']);
             $cost = intval(trim(htmlspecialchars($_POST['cost'])));
             $info = trim(htmlspecialchars($_POST['info']));
@@ -381,7 +397,6 @@
             mysqli_query($connect, $ins);
             echo "<script>window.location=document.URL;</script>";
         }
-
 
         //Изменение не работает без выбора страны и города
         if (isset($_POST['changehotel'])) {
@@ -417,8 +432,6 @@
             echo "<script>window.location=document.URL;</script>";
         }
 
-
-// НЕ РАБОТАЕТ УДАЛЕНИЕ без выбора страны и города
         if (isset($_POST['delhotel'])) {
 
             foreach ($_POST as $k => $v) {

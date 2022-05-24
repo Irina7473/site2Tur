@@ -88,20 +88,23 @@ if (isset($_POST['changeuser'])) {
             if ($user != '') {
                 $change = "UPDATE users SET login='" . $user . "' WHERE id=" . $idc;
                 mysqli_query($connect, $change);
+                $err = mysqli_connect_error();
             }
             if ($pass != '') {
                 $change = "UPDATE users SET pass='" . md5($pass) . "' WHERE id=" . $idc;
                 mysqli_query($connect, $change);
+                $err = mysqli_connect_error();
             }
             if ($email != '') {
                 $change = "UPDATE users SET email='" . $email . "' WHERE id=" . $idc;
                 mysqli_query($connect, $change);
+                $err = mysqli_connect_error();
             }
             if ($role != '') {
                 $change = "UPDATE users SET role_id='" . $role . "' WHERE id=" . $idc;
                 mysqli_query($connect, $change);
+                $err = mysqli_connect_error();
             }
-
         }
     }
 
