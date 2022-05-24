@@ -76,8 +76,18 @@
             foreach ($_POST as $k => $v) {
                 if (substr($k, 0, 2) == 'cb') {
                     $idc = substr($k, 2);
-                    $del = 'DELETE FROM countries WHERE id=' . $idc;
-                    mysqli_query($connect, $del);
+
+                    $sel = "SELECT id FROM countries WHERE id=" . $idc . "   AND EXISTS(SELECT country_id FROM cities WHERE country_id =" . $idc . ")";
+                    $res = mysqli_query($connect, $sel);
+                    $count = mysqli_num_rows($res);
+
+                    if ($count > 0) {
+                        echo '<h3><span style="color:red;">Невозможно удалить страну, есть данные в других таблицах!</h3>';
+                        exit();
+                    } else {
+                        $del = 'DELETE FROM countries WHERE id=' . $idc;
+                        mysqli_query($connect, $del);
+                    }
                 }
             }
             echo '<script>window.location=document.URL;</script>';
@@ -91,11 +101,27 @@
     <!-- Форма добавления/удаления городов -->
     <div class="col-sm-6 col-md-6 col-lg-6 right">
         <h4>Добавление/удаление городов</h4>
+        
+        <?php
+        $countryname = 0;
+        if (isset($_POST['countryname'])) {
+            $countryname = $_POST['countryname'];
+        }
+        ?>
+        
         <form action="index.php?page=4" method="post" class="input-group" id="formcity">
 
             <?php
-            $sel = "SELECT CI.id, CI.city, CO.country FROM countries AS CO, cities AS CI WHERE CI.country_id = CO.id ORDER BY CO.country, CI.city";
-            $res = mysqli_query($connect, $sel);
+            if ($countryname > 0) {
+                $sel = "SELECT CI.id, CI.city, CO.country FROM countries AS CO, cities AS CI 
+                                  WHERE CI.country_id = CO.id AND CO.id=" . $countryname . " ORDER BY CO.country, CI.city";
+                $res = mysqli_query($connect, $sel);
+            }
+            else {
+                $sel = "SELECT CI.id, CI.city, CO.country FROM countries AS CO, cities AS CI 
+                                  WHERE CI.country_id = CO.id ORDER BY CO.country, CI.city";
+                $res = mysqli_query($connect, $sel);
+            }
             ?>
 
             <table class="table table-striped">
@@ -121,28 +147,32 @@
 
             </table>
 
-            <?php
-            mysqli_free_result($res);
-            $res = mysqli_query($connect, "SELECT * FROM countries");
-            ?>
+            <?php   mysqli_free_result($res);  ?>
 
             <div class="divgroup">
             <select name="countryname" class="form-select">
-                <option selected>Выберите страну</option>
+
+                <?php
+                $res = mysqli_query($connect, "SELECT * FROM countries ORDER BY country");
+                ?>
+
+                <option value="0">Выберите страну</option>
 
                 <?php
                 while ($row = mysqli_fetch_array($res, MYSQLI_NUM)) { ?>
 
-                    <option value="<?php echo $row[0] ?>">
-                        <?php echo $row[1] ?>
+                    <option value="<?php echo $row[0] ?>"
+                        <?php if (isset($_POST['countryname']) && $row[0] == $_POST['countryname']) echo 'selected="selected"'; ?>
+                    >   <?php echo $row[1] ?>
                     </option>
 
                 <?php } ?>
 
             </select>
-
+                <input type="submit" name="selcountry1" value="Выбрать страну" class="btn btn-sm btn-info">
             <input type="text" name="city" placeholder="Город">
             </div>
+
             <div class="divgroup">
                 <input type="submit" name="addcity" value="Добавить" class="btn btn-sm btn-primary">
                 <input type="submit" name="changecity" value="Изменить" class="btn btn-sm btn-info">
@@ -189,8 +219,18 @@
             foreach ($_POST as $k => $v) {
                 if (substr($k, 0, 2) == 'ci') {
                     $idc = substr($k, 2);
-                    $del = 'DELETE FROM cities WHERE id=' . $idc;
-                    mysqli_query($connect, $del);
+
+                    $sel = "SELECT id FROM cities WHERE id=" . $idc . "   AND EXISTS(SELECT city_id FROM hotels WHERE city_id =" . $idc . ")";
+                    $res = mysqli_query($connect, $sel);
+                    $count = mysqli_num_rows($res);
+
+                    if ($count > 0) {
+                        echo '<h3><span style="color:red;">Невозможно удалить город, есть данные в других таблицах!</h3>';
+                        exit();
+                    } else {
+                        $del = 'DELETE FROM cities WHERE id=' . $idc;
+                        mysqli_query($connect, $del);
+                    }
                 }
                 echo '<script>window.location=document.URL;</script>';
             }
@@ -394,6 +434,7 @@
             }
             echo "<script>window.location=document.URL;</script>";
         }
+
         ?>
 
     </div>
