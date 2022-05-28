@@ -14,9 +14,7 @@ function connect(
 }
 
 
-/**
- * Registration
- */
+/** Registration */
 function register($name, $pass, $email, $role) {
 
     $name = trim(htmlspecialchars($name));
@@ -52,4 +50,39 @@ function register($name, $pass, $email, $role) {
         return false;
     }
     return true;
+}
+
+/** Authentication */
+function login($name,$pass)
+{
+    $connect = connect();
+    $name=trim(htmlspecialchars($name));
+    $pass=trim(htmlspecialchars($pass));
+    if ($name=="" || $pass=="")
+    {
+        echo "<h3/><span style='color:red;'>Заполните все обязательные поля!</span><h3/>";
+        return false;
+    }
+    if (strlen($name)<3 || strlen($name)>30 ||
+        strlen($pass)<3 || strlen($pass)>30) {
+        echo "<h3/><span style='color:red;'>Длина значения должна быть между 3 и 30!</span><h3/>";
+        return false;
+    }
+
+    $sel='select * from users where login="'.$name.'" and pass="'.md5($pass).'"';
+    $res = mysqli_query($connect, $sel);
+    if($row=mysqli_fetch_array($res,MYSQLI_NUM)){
+        $_SESSION['ruser']=$name;
+        if($row[5]==1)
+        {
+            $_SESSION['radmin']=$name;
+        }
+        if($row[5]==3)
+        {
+            $_SESSION['rfill']=$name;
+        }
+        return true;
+    }
+    echo "<h3/><span style='color:red;'>Нет такого пользователя!</span><h3/>";
+    return false;
 }

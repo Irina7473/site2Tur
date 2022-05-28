@@ -8,10 +8,22 @@
     <li <?php echo ($page == 3) ? "class='active'" : "" ?>>
         <a href="index.php?page=3">Регистрация</a>
     </li>
-    <li <?php echo ($page == 4) ? "class='active'" : "" ?>>
-        <a href="index.php?page=4">Консоль администратора</a>
-    </li>
-    <li <?php echo ($page == 5) ? "class='active'" : "" ?>>
-        <a href="index.php?page=5">Управление пользователями</a>
-    </li>
+
+    <?php
+    if(isset($_SESSION['radmin']))
+    {
+        if($page==4) $c='active';
+        else $c='';
+        echo '<li class="'.$c.'"><a href="index.php?page=4">Консоль администратора</a></li>';
+    }
+    ?>
+
+    <?php
+    if(isset($_SESSION['radmin']))
+    {
+        if($page==5) $c='active';
+        else $c='';
+        echo '<li class="'.$c.'"><a href="index.php?page=5">Управление пользователями</a></li>';
+    }
+    ?>
 </ul>

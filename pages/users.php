@@ -2,6 +2,12 @@
 <div class="col-6">
 
 <?php
+if (!isset($_SESSION['radmin']))
+{
+    echo "<h3/><span style='color:red;'>Только для администраторов!</span><h3/>";
+    exit();
+}
+
 $connect = connect();
 $sel = "SELECT U.id, U.login, R.role FROM users AS U, roles AS R WHERE U.role_id = R.id";
 $res = mysqli_query($connect, $sel);
