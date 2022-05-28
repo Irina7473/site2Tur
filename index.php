@@ -49,7 +49,7 @@ if (isset($_GET['page'])) {
                     if ($page == 1) include_once('pages/tours.php');
                     if ($page == 2) include_once('pages/comments.php');
                     if ($page == 3) include_once('pages/registration.php');
-                    if ($page == 4) include_once('pages/admin.php');
+                    if ($page == 4) if(isset($_SESSION['radmin']) || isset($_SESSION['rfill'])) include_once('pages/admin.php');
                     if ($page == 5) if(isset($_SESSION['radmin'])) include_once('pages/users.php');
                 }
 

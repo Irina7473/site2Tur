@@ -1,7 +1,8 @@
 <h3>Форма добавления информации на сайт</h3>
 <div class="row">
     <?php
-        if ( !isset($_SESSION['radmin']) || !isset($_SESSION['rfill']))
+        if ( !isset($_SESSION['radmin']))
+            if(!isset($_SESSION['rfill']))
         {
             echo "<h3/><span style='color:red;'>Только для администраторов или редакторов!</span><h3/>";
             exit();

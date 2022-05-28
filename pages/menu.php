@@ -10,7 +10,7 @@
     </li>
 
     <?php
-    if(isset($_SESSION['radmin']))
+    if(isset($_SESSION['radmin']) || isset($_SESSION['rfill']))
     {
         if($page==4) $c='active';
         else $c='';

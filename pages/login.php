@@ -11,6 +11,7 @@ if (isset($_SESSION['ruser'])) {   ?>
 if (isset($_POST['ex'])) {
     unset($_SESSION['ruser']);
     unset($_SESSION['radmin']);
+    unset($_SESSION['rfill']);
     echo '<script>window.location.reload()</script>';
 }
 } else {

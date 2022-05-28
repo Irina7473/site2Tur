@@ -63,11 +63,6 @@ function login($name,$pass)
         echo "<h3/><span style='color:red;'>Заполните все обязательные поля!</span><h3/>";
         return false;
     }
-    if (strlen($name)<3 || strlen($name)>30 ||
-        strlen($pass)<3 || strlen($pass)>30) {
-        echo "<h3/><span style='color:red;'>Длина значения должна быть между 3 и 30!</span><h3/>";
-        return false;
-    }
 
     $sel='select * from users where login="'.$name.'" and pass="'.md5($pass).'"';
     $res = mysqli_query($connect, $sel);
