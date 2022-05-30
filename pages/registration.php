@@ -1,7 +1,7 @@
 <h3>Форма регистрации</h3>
+<hr>
 
 <?php
-
 if (!isset($_POST['regbtn'])) {
 ?>
 
@@ -30,6 +30,7 @@ if (!isset($_POST['regbtn'])) {
         <button type="submit" class="btn btn-primary" name="regbtn">Регистрация</button>
 
     </form>
+    <hr>
 
 <?php
 } else {

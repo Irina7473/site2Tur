@@ -1,4 +1,5 @@
 <h3>Форма добавления информации на сайт</h3>
+<hr>
 <div class="row">
     <?php
         if ( !isset($_SESSION['radmin']))
@@ -522,3 +523,4 @@
     <br>
     <br>
 </div>
+<hr>

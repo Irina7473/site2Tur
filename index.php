@@ -65,6 +65,7 @@ if (isset($_GET['page'])) {
 
     <script src="js/jquery-3.6.0.min.js"></script>
     <script src="js/bootstrap.js"></script>
+    <script src="js/option.js"></script>
 </body>
 
 </html>
