@@ -330,7 +330,7 @@
                 $res = mysqli_query($connect, "SELECT * FROM countries ORDER BY country");
                 ?>
 
-                <option value="0">Выберите страну...</option>
+                <option value="0">Выберите страну.</option>
 
                 <?php
                 while ($row = mysqli_fetch_array($res)) {  ?>
@@ -348,7 +348,7 @@
             </select>
             <input type="submit" name="selcountry" value="Выбрать страну" class="btn btn-sm btn-info">
             <select name="cityid">
-                <option value="0">Выберите город...</option>
+                <option value="0">Выберите город</option>
 
                 <?php
                 while ($row = mysqli_fetch_array($result)) {
