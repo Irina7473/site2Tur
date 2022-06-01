@@ -67,6 +67,7 @@ function login($name,$pass)
     $sel='select * from users where login="'.$name.'" and pass="'.md5($pass).'"';
     $res = mysqli_query($connect, $sel);
     if($row=mysqli_fetch_array($res,MYSQLI_NUM)){
+        $_SESSION['rid']=$row[0];
         $_SESSION['ruser']=$name;
         if($row[5]==1)
         {

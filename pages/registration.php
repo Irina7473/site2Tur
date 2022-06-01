@@ -1,7 +1,7 @@
-<h3>Форма регистрации</h3>
-<hr>
-
 <?php
+if(isset($_SESSION['ruser'])) exit();
+
+echo '<h3>Форма регистрации</h3><hr>';
 if (!isset($_POST['regbtn'])) {
 ?>
 
@@ -40,5 +40,4 @@ if (!isset($_POST['regbtn'])) {
         echo '<h3><span style="color:green;">Новый пользователь добавлен!</h3>';
 
     }
-
 }

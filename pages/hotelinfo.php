@@ -31,17 +31,17 @@
         echo '<div class="text-uppercase text- center">Стоимость - ' . $hcost . '</div><br>';
         echo '<div class="text-uppercase text- center">' . $hinfo . '</div><br>';
 
-        echo '<div class="row"><div class="col-md-6 text- center">';
+        //echo '<div class="row"><div class="col-md-6 text- center">';
         $sel = 'SELECT imagepath FROM images WHERE  hotel_id=' . $hotel;
         $res = mysqli_query($connect, $sel);
         echo '<span class="label label-info">Наши фото</span>';
-        echo '<ul id="gallery">';
+        echo '<div id="gallery" class="col-md-4>';
 
         while ($row = mysqli_fetch_array($res, MYSQLI_NUM)) {
-            echo ' <li><img src="../' . $row[0] . '"></li>';
+            echo ' <img src="../' . $row[0] . '" class="img-fluid">';
         }
         mysqli_free_result($res);
-        echo '</ul>';
+        echo '</div>';
     }
 ?>
 

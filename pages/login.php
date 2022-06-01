@@ -9,6 +9,7 @@ if (isset($_SESSION['ruser'])) {   ?>
 
     <?php
     if (isset($_POST['exit'])) {
+        unset($_SESSION['rid']);
         unset($_SESSION['ruser']);
         unset($_SESSION['radmin']);
         unset($_SESSION['rfill']);
